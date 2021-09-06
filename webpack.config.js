@@ -1,12 +1,12 @@
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const path = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = [
-
     {
         entry: './src/index.tsx',
-        optimization: {
-            minimize: false,
+        devServer: {
+            historyApiFallback: true,
         },
         module: {
             rules: [
@@ -15,6 +15,7 @@ module.exports = [
                     use: 'ts-loader',
                     exclude: /node_modules/,
                 },
+                { test: /\.css$/, use: ['style-loader', 'css-loader'] },
                 {
                     test: /\.(js|jsx)$/,
                     exclude: /node_modules/,
@@ -43,7 +44,12 @@ module.exports = [
             new HtmlWebPackPlugin({
                 template: './public/index.html',
                 filename: './index.html',
-                favicon: './public/favicon.ico',
+            }),
+            new CopyPlugin({
+                patterns: [
+                    { from: 'posts', to: 'posts' },
+                    { from: 'posts', to: 'posts' },
+                ],
             }),
         ],
         resolve: {
@@ -52,7 +58,7 @@ module.exports = [
         output: {
             filename: 'app.js',
             path: path.resolve(__dirname, 'dist/public'),
+            publicPath: '/',
         },
     },
-
 ];
