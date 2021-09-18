@@ -1,19 +1,17 @@
-
 import fs from 'fs';
 import { formatPostEntry } from './formatPostEntry';
 import { formatPostContent } from './formatPost';
 import { headerFormatting } from './styles';
 import { POST_OUTPUT_PATH, OUTPUT_PATH } from './constants';
+import { generateSiteMap } from './siteMap';
 
-const textPosts = fs.readdirSync('textPosts').sort((a, b) => a > b ? -1 : 1);
+const textPosts = fs.readdirSync('textPosts').sort((a, b) => (a > b ? -1 : 1));
 
-fs.mkdirSync(POST_OUTPUT_PATH, { recursive: true })
+fs.mkdirSync(POST_OUTPUT_PATH, { recursive: true });
 
-
-console.log(textPosts)
-const entries = []
-const headline = `<h1>Postings</h1>`
-
+console.log(textPosts);
+const entries = [];
+const headline = `<h1>Postings</h1>`;
 
 for (const textPost of textPosts) {
     const fileContent = fs.readFileSync('textPosts/' + textPost, 'utf8');
@@ -23,14 +21,27 @@ for (const textPost of textPosts) {
     const themes = splitContent.shift()!.split(', ');
     const threads = splitContent.shift()!.split(', ');
     const content = splitContent.join('\n');
-    const postEntryData = formatPostEntry({ title, themes, threads, content, date })
+    const postEntryData = formatPostEntry({
+        title,
+        themes,
+        threads,
+        content,
+        date,
+    });
 
-    entries.push(postEntryData)
+    entries.push(postEntryData);
 
+    const postContentData = formatPostContent({
+        title,
+        themes,
+        threads,
+        content,
+        date,
+    });
 
-    const postContentData = formatPostContent({ title, themes, threads, content, date });
-
-    fs.writeFileSync(POST_OUTPUT_PATH + '/' + date + '.html', `
+    fs.writeFileSync(
+        POST_OUTPUT_PATH + '/' + date + '.html',
+        `
     <html>
         ${headerFormatting()}
         <body>
@@ -39,19 +50,13 @@ for (const textPost of textPosts) {
                 ${postContentData}
             </div>
         </body>
-    </html>`)
+    </html>`
+    );
 }
 
-export interface Post {
-    title: string,
-    content: string,
-    date: string,
-    themes: string[],
-    threads: string[]
-}
-
-
-fs.writeFileSync(OUTPUT_PATH + '/' + 'index.html', `
+fs.writeFileSync(
+    OUTPUT_PATH + '/' + 'index.html',
+    `
     <html>
         ${headerFormatting()}
         <body>
@@ -60,4 +65,13 @@ fs.writeFileSync(OUTPUT_PATH + '/' + 'index.html', `
                 ${entries.join('\n')}
             </div>
         </body>
-    </html>`)
+    </html>`
+);
+
+fs.writeFileSync(
+    OUTPUT_PATH + '/' + 'siteMap.xml',
+    generateSiteMap(
+        'https://skeleton.club/posts/post',
+        textPosts.map((entry) => entry.split(' ')[0] + '.html')
+    )
+);

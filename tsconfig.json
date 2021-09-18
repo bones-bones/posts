@@ -1,9 +1,7 @@
 {
     "compilerOptions": {
         "target": "es6",
-        "lib": [
-            "es6"
-        ],
+        "lib": ["es6"],
         "allowJs": true,
         "skipLibCheck": true,
         "esModuleInterop": true,
@@ -17,11 +15,7 @@
         "outDir": "dist",
         "isolatedModules": false,
         "noEmit": true,
-        "types": [
-            "@types/node",
-        ]
+        "types": ["@types/node"]
     },
-    "include": [
-        "src"
-    ],
+    "include": ["src"]
 }

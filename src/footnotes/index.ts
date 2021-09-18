@@ -1,1 +1,1 @@
-export * from './getFootnoteSymbol'
+export * from './getFootnoteSymbol';

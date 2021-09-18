@@ -7,10 +7,10 @@ export const getStyle = () =>
         html {
             scroll-behavior: smooth;
         }
-    </style>`
+    </style>`;
 
 export const headerFormatting = () =>
     `<title>Posts</title>
     <head>
         ${getStyle()}
-    </head>`
+    </head>`;

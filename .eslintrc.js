@@ -4,11 +4,7 @@ module.exports = {
         browser: true,
         es6: true,
     },
-    extends: [
-        'eslint:recommended',
-        'plugin:@typescript-eslint/recommended',
-        'plugin:react/recommended',
-    ],
+    extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
     globals: {
         Atomics: 'readonly',
         SharedArrayBuffer: 'readonly',
@@ -16,16 +12,12 @@ module.exports = {
     settings: { react: { version: 'detect' } },
     parser: '@typescript-eslint/parser',
     parserOptions: {
-        ecmaFeatures: {
-            jsx: true,
-        },
         sourceType: 'module',
     },
-    plugins: ['react', '@typescript-eslint'],
+    plugins: ['@typescript-eslint'],
     rules: {
         'prefer-destructuring': ['error', { object: true, array: false }],
         'import/prefer-default-export': 0,
-        'react/prop-types': 0,
         '@typescript-eslint/explicit-function-return-type': 0,
         '@typescript-eslint/no-use-before-define': 0,
         '@typescript-eslint/no-inferrable-types': 0,
