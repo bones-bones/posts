@@ -1,5 +1,5 @@
 import { Post } from "./generateContent";
-import { getFootnoteSymbol } from "./getFootnoteSymbol";
+import { getFootnoteSymbol } from "./footnotes";
 
 export const formatPostContent = ({ title, date, themes, threads, content }: Post) => {
     let postEntry = `<h3>${title}</h3>`;

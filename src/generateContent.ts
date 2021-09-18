@@ -3,8 +3,13 @@ import fs from 'fs';
 import { formatPostEntry } from './formatPostEntry';
 import { formatPostContent } from './formatPost';
 import { headerFormatting } from './styles';
+import { POST_OUTPUT_PATH, OUTPUT_PATH } from './constants';
 
 const textPosts = fs.readdirSync('textPosts').sort((a, b) => a > b ? -1 : 1);
+
+fs.mkdirSync(POST_OUTPUT_PATH, { recursive: true })
+
+
 console.log(textPosts)
 const entries = []
 const headline = `<h1>Postings</h1>`
@@ -25,13 +30,13 @@ for (const textPost of textPosts) {
 
     const postContentData = formatPostContent({ title, themes, threads, content, date });
 
-    fs.writeFileSync('./dist/gend/post/' + date + '.html', `
+    fs.writeFileSync(POST_OUTPUT_PATH + '/' + date + '.html', `
     <html>
-        ${ headerFormatting()}
+        ${headerFormatting()}
         <body>
             <div>
-                ${ headline}
-                ${ postContentData}
+                ${headline}
+                ${postContentData}
             </div>
         </body>
     </html>`)
@@ -46,9 +51,7 @@ export interface Post {
 }
 
 
-
-
-fs.writeFileSync('./dist/gend/' + 'index.html', `
+fs.writeFileSync(OUTPUT_PATH + '/' + 'index.html', `
     <html>
         ${headerFormatting()}
         <body>
