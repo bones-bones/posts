@@ -3,6 +3,34 @@ const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = [
+    // {
+    //     entry: './server/generator/generateContent.ts',
+    //     target: 'node',
+    //     module: {
+    //         rules: [
+    //             {
+    //                 test: /\.tsx?$/,
+    //                 use: 'ts-loader',
+    //                 exclude: /node_modules/,
+    //             },
+    //             {
+    //                 test: /\.(js|jsx)$/,
+    //                 exclude: /node_modules/,
+    //                 use: {
+    //                     loader: 'babel-loader',
+    //                 },
+    //             },
+    //         ],
+    //     },
+    //     resolve: {
+    //         extensions: ['.tsx', '.ts', '.js'],
+    //     },
+    //     output: {
+    //         filename: 'generateContent.js',
+    //         path: path.resolve(__dirname, 'dist'),
+    //     },
+    //     node: { __dirname: false },
+    // },
     {
         entry: './src/index.tsx',
         devServer: {
@@ -58,7 +86,7 @@ module.exports = [
         output: {
             filename: 'app.js',
             path: path.resolve(__dirname, 'dist/public'),
-            publicPath: '/',
+
         },
     },
 ];

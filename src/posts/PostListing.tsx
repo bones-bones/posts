@@ -21,20 +21,19 @@ export const PostListing = ({
                 <h3>{title}</h3>
             </Link>
             <div>
-                {' '}
                 <span>themes:</span> {themes.toString()}
                 <div></div>
             </div>
             {threads && (
                 <div>
-                    threads:{' '}
+                    threads:
                     {threads.map((entry) => {
                         return (
                             <>
                                 <ThreadSpan
                                     key={entry}
                                     entryThread={entry}
-                                ></ThreadSpan>{' '}
+                                ></ThreadSpan>
                                 {entry}
                             </>
                         );
