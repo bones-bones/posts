@@ -14,8 +14,18 @@ export const formatPostContent = ({
 
     let transformedContent = content.replace(/\n/g, '<br></br>');
     transformedContent = transformedContent.replace(
-        /!!(.+?)!!(https.+?)!!/g,
+        /!!(.+?)!!((https|mailto):.+?)!!/g,
         '<a href="$2" target="_blank">$1</a>'
+    );
+
+    transformedContent = transformedContent.replace(
+        /__(.+?)__/g,
+        '<i>$1</i>'
+    );
+
+    transformedContent = transformedContent.replace(
+        /^# (.*)$/g,
+        '<h2>$1</ih2>'
     );
 
     const footnoteProcessingParts = [
@@ -27,12 +37,13 @@ export const formatPostContent = ({
         for (let i = 0; i < footnoteProcessingParts.length; i++) {
             const linkId = `fn-link-${i}`;
             const footnoteId = `fn-${i}`;
+            const footnoteSymbol = getFootnoteSymbol(
+                i
+            )
 
             transformedContent = transformedContent.replace(
                 footnoteProcessingParts[i][0],
-                `<a href="#${footnoteId}" id="${linkId}">${getFootnoteSymbol(
-                    i
-                )}</a>`
+                `<a href="#${footnoteId}" id="${linkId}">${footnoteSymbol}</a>`
             );
             trackedFootNotes.push(footnoteProcessingParts[i][1]);
         }

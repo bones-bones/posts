@@ -43,7 +43,12 @@ for (const textPost of textPosts) {
         POST_OUTPUT_PATH + '/' + date + '.html',
         `
     <html>
-        ${headerFormatting()}
+        ${headerFormatting(`
+        <link rel="icon" type="image/png" href="https://skeleton.club/Favicon.ico" />
+        <meta property="og:title" content="${title}" />
+        <meta property="og:description" content="${threads.length > 0 ? "threads: " + threads.join(', ') + '.' : ''}${themes.length > 1 ? "themes: " + themes.join(', ') : ''}" />
+        <meta property="og:image" content="https://skeleton.club/logo192.png" />
+        `)}
         <body>
             <div>
                 ${headline}
@@ -58,7 +63,12 @@ fs.writeFileSync(
     OUTPUT_PATH + '/' + 'index.html',
     `
     <html>
-        ${headerFormatting()}
+        ${headerFormatting(
+        `<link rel="icon" type="image/png" href="https://skeleton.club/Favicon.ico" />
+            <meta property="og:title" content="Skeleton Club - Posts" />
+            <meta property="og:description" content="A blog????." />
+            <meta property="og:image" content="https://skeleton.club/logo192.png" />`
+    )}
         <body>
             <div>
                 ${headline}
