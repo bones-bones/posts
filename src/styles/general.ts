@@ -9,8 +9,8 @@ export const getStyle = () =>
         }
     </style>`;
 
-export const headerFormatting = (metadata: string) =>
-    `<title>Posts</title>
+export const headerFormatting = (metadata: string, title: string) =>
+    `<title>${title}</title>
     <head>
         ${getStyle()}
         ${metadata}
