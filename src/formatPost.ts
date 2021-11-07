@@ -19,11 +19,25 @@ export const formatPostContent = ({
 
     transformedContent = transformedContent.replace(/__(.+?)__/g, '<i>$1</i>');
 
+    transformedContent = transformedContent.replace(/--(.+?)--/g, '<s>$1</s>');
+
+
     transformedContent = transformedContent.replace(/# (.+)\n/g, '<h3>$1</h3>');
 
     transformedContent = transformedContent.replace(
         /\[\[(.+?)\]\]/g,
-        '<img src="$1"></img>'
+        (...entry) => {
+            const theResource = entry[1];
+
+            if (theResource.includes('mp4')) {
+
+                return `<video controls autoplay loop src="${theResource}"></video>`
+            }
+
+
+
+            return `<img src="${theResource}"></img>`
+        }
     );
 
     transformedContent = transformedContent.replace(/\n/g, '<br></br>');
@@ -45,7 +59,7 @@ export const formatPostContent = ({
 
             transformedContent = transformedContent.replace(
                 footnoteProcessingParts[i][0],
-                `<a href="#${footnoteId}" id="${linkId}">${footnoteSymbol}</a>`
+                `<a style="text-decoration:none;" href="#${footnoteId}" id="${linkId}">${footnoteSymbol}</a>`
             );
             trackedFootNotes.push(footnoteProcessingParts[i][1]);
         }
@@ -69,7 +83,7 @@ export const formatPostContent = ({
 
                     return `
                     <div>
-                        <a href="#${linkId}" id="${footnoteId}">${getFootnoteSymbol(
+                        <a style="text-decoration:none;" href="#${linkId}" id="${footnoteId}">${getFootnoteSymbol(
                         index
                     )}</a> ${entry}
                     </div>`;

@@ -8,3 +8,4 @@ Wanted a blog, started building a blog, started blogging about building a blog
 `^^footnote text^^` - adds a footnote
 `__text__` - italic text
 `# heading title` - a heading title
+`--strikethrough text--` - strikethrough
