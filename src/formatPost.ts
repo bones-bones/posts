@@ -21,7 +21,6 @@ export const formatPostContent = ({
 
     transformedContent = transformedContent.replace(/--(.+?)--/g, '<s>$1</s>');
 
-
     transformedContent = transformedContent.replace(/# (.+)\n/g, '<h3>$1</h3>');
 
     transformedContent = transformedContent.replace(
@@ -30,17 +29,14 @@ export const formatPostContent = ({
             const theResource = entry[1];
 
             if (theResource.includes('mp4')) {
-
-                return `<video controls autoplay loop src="${theResource}"></video>`
+                return `<video controls autoplay loop src="${theResource}"></video>`;
             }
 
-
-
-            return `<img src="${theResource}"></img>`
+            return `<img src="${theResource}"/>`;
         }
     );
 
-    transformedContent = transformedContent.replace(/\n/g, '<br></br>');
+    transformedContent = transformedContent.replace(/\n/g, '<br/>');
 
     transformedContent = transformedContent.replace(/\\</g, '&lt;');
     transformedContent = transformedContent.replace(/\\>/g, '&gt;');
@@ -72,8 +68,8 @@ export const formatPostContent = ({
 
     if (trackedFootNotes.length > 0) {
         const footnoteSection = `
-        <br></br>
-        <br></br>
+        <br/>
+        <br/>
         <h4>Footnotes</h4>
         <div>
             ${trackedFootNotes
@@ -88,7 +84,7 @@ export const formatPostContent = ({
                     )}</a> ${entry}
                     </div>`;
                 })
-                .join('<br></br>')}
+                .join('<br/>')}
         </div>`;
 
         postEntry += footnoteSection;

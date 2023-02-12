@@ -5,18 +5,20 @@ import { headerFormatting } from './styles';
 import { POST_OUTPUT_PATH, OUTPUT_PATH } from './constants';
 import { generateSiteMap } from './siteMap';
 import { config } from 'dotenv';
+import { JSDOM } from 'jsdom';
+import { Post } from './types';
+
 config();
 const textPosts = fs.readdirSync('textPosts').sort((a, b) => (a > b ? -1 : 1));
 
 fs.mkdirSync(POST_OUTPUT_PATH, { recursive: true });
 
-console.log(textPosts, process.env.ROOT_URL);
 const entries = [];
-const headline = `<h1><a href="${process.env.ROOT_URL}/posts" style="color:black;">Posts</a></h1>${process}`;
+const headline = `<a style="color:black;" href="${process.env.ROOT_URL}">Home</a> // <h1 style="display: inline;"><a href="${process.env.ROOT_URL}/posts" style="color:black;">Posts</a></h1>`;
 
-for (const textPost of textPosts) {
-    const fileContent = fs.readFileSync('textPosts/' + textPost, 'utf8');
-    const splitContent = fileContent.split('\n');
+const postTextToObject = (value: string) => {
+    const splitContent = value.split('\n');
+
     const title = splitContent.shift()!;
     const date = splitContent.shift()!;
     const themes = splitContent
@@ -28,6 +30,14 @@ for (const textPost of textPosts) {
         .split(', ')
         .filter((entry) => entry !== '');
     const content = splitContent.join('\n');
+
+    return { title, date, themes, threads, content } as Post;
+};
+
+for (const textPost of textPosts) {
+    const fileContent = fs.readFileSync('textPosts/' + textPost, 'utf8');
+    const { title, themes, threads, content, date } =
+        postTextToObject(fileContent);
     const postEntryData = formatPostEntry({
         title,
         themes,
@@ -46,7 +56,10 @@ for (const textPost of textPosts) {
         date,
     });
 
-    console.log(threads);
+    const plainTextDescription =
+        new JSDOM('<!DOCTYPE html>' + postContentData).window.document.body
+            .textContent || '';
+
     fs.writeFileSync(
         POST_OUTPUT_PATH + '/' + date + '.html',
         `
@@ -55,12 +68,18 @@ for (const textPost of textPosts) {
             `
         <meta property="og:title" content="${title}" />
         <meta property="og:type" content="website" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta property="og:description" content="${
             threads.length > 0 ? 'threads: ' + threads.join(', ') + '.' : ''
-        }${themes.length > 0 ? 'themes: ' + themes.join(', ') : ''}" />
+        }${
+                themes.length > 0 ? 'themes: ' + themes.join(', ') : ''
+            } -  ${plainTextDescription.substring(0, 200)}..." />
         <meta property="og:image" content="${
             process.env.ROOT_URL
-        }/logo192.png" />
+        }/posts/posts.png" />
+        <meta name="twitter:image" content="${
+            process.env.ROOT_URL
+        }/posts/posts.png"/>
         <link rel="icon" type="image/png" href="${
             process.env.ROOT_URL
         }/Favicon.ico"></link>
@@ -80,13 +99,14 @@ for (const textPost of textPosts) {
 }
 
 fs.writeFileSync(
-    OUTPUT_PATH + '/' + 'index.html',
+    OUTPUT_PATH + '/index.html',
     `
     <html>
         ${headerFormatting(
             `<link rel="icon" type="image/png" href="${process.env.ROOT_URL}/Favicon.ico" />
             <meta property="og:title" content="${process.env.SITE_TITLE}" />
             <meta property="og:type" content="website" />
+            <meta name="viewport" content="width=device-width, initial-scale=1">
             <meta property="og:description" content="A blog????." />
             <meta property="og:image" content="${process.env.ROOT_URL}/logo192.png" />`,
             'Posts'

@@ -6,10 +6,9 @@ export const generateSiteMap = (root: string, pages: string[]) =>
             .map((entry) => root + '/' + entry)
             .map(
                 (entry) =>
-                    `
-        <url>
-            <loc>${entry}</loc>
-        </url>`
+                    `<url>
+                        <loc>${entry}</loc>
+                    </url>`
             )
             .join('\n')
     );
