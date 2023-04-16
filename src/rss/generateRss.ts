@@ -39,3 +39,12 @@ export const getFeed = (val: string, channel: ChannelDefinition) => {
 </rss>
 `;
 };
+
+export const generateRss = (
+    posts: ItemDefinition[],
+    channel: ChannelDefinition
+) => {
+    const postContent = posts.map(getItem).join(`
+    `);
+    return getFeed(postContent, channel);
+};
