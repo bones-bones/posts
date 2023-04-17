@@ -1,15 +1,10 @@
 import { Post } from './types';
 import { TextEncoder } from 'util';
 
-export const formatPostEntry = ({ title, date, themes, threads }: Post) => {
+export const formatPostEntry = ({ title, date, themes }: Post) => {
     let postEntry = `<a href="./post/${date}.html"><h3>${title}</h3></a>`;
     if (themes.length > 0) {
-        const themeLine = `<div>themes: ${themes.join(', ')}</div>`;
-        postEntry += themeLine;
-    }
-
-    if (threads.length > 0 && threads[0] !== '') {
-        const threadLine = `<div>threads: ${threads
+        const themeLine = `<div>themes: ${themes
             .map((entry) => {
                 const threadColor = parseInt(
                     new TextEncoder().encode(entry + '12345').join('')
@@ -22,8 +17,7 @@ export const formatPostEntry = ({ title, date, themes, threads }: Post) => {
             `;
             })
             .join(', ')}</div>`;
-
-        postEntry += threadLine;
+        postEntry += themeLine;
     }
 
     return postEntry;

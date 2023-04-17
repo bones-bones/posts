@@ -6,7 +6,8 @@ import { POST_OUTPUT_PATH, OUTPUT_PATH } from './constants';
 import { generateSiteMap } from './siteMap';
 import { config } from 'dotenv';
 import { JSDOM } from 'jsdom';
-import { Post } from './types';
+import { generateRss } from './rss';
+import { postTextToObject } from './postTextToObject';
 
 config();
 const textPosts = fs.readdirSync('textPosts').sort((a, b) => (a > b ? -1 : 1));
@@ -16,32 +17,15 @@ fs.mkdirSync(POST_OUTPUT_PATH, { recursive: true });
 const entries = [];
 const headline = `<a style="color:black;" href="${process.env.ROOT_URL}">Home</a> // <h1 style="display: inline;"><a href="${process.env.ROOT_URL}/posts" style="color:black;">Posts</a></h1>`;
 
-const postTextToObject = (value: string) => {
-    const splitContent = value.split('\n');
-
-    const title = splitContent.shift()!;
-    const date = splitContent.shift()!;
-    const themes = splitContent
-        .shift()!
-        .split(', ')
-        .filter((entry) => entry !== '');
-    const threads = splitContent
-        .shift()!
-        .split(', ')
-        .filter((entry) => entry !== '');
-    const content = splitContent.join('\n');
-
-    return { title, date, themes, threads, content } as Post;
-};
-
-for (const textPost of textPosts) {
+const posts = textPosts.map((textPost) => {
     const fileContent = fs.readFileSync('textPosts/' + textPost, 'utf8');
-    const { title, themes, threads, content, date } =
-        postTextToObject(fileContent);
+    return postTextToObject(fileContent);
+});
+
+for (const { title, themes, content, date } of posts) {
     const postEntryData = formatPostEntry({
         title,
         themes,
-        threads,
         content,
         date,
     });
@@ -51,7 +35,6 @@ for (const textPost of textPosts) {
     const postContentData = formatPostContent({
         title,
         themes,
-        threads,
         content,
         date,
     });
@@ -70,10 +53,8 @@ for (const textPost of textPosts) {
         <meta property="og:type" content="website" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta property="og:description" content="${
-            threads.length > 0 ? 'threads: ' + threads.join(', ') + '.' : ''
-        }${
-                themes.length > 0 ? 'themes: ' + themes.join(', ') : ''
-            } -  ${plainTextDescription.substring(0, 200)}..." />
+            themes.length > 0 ? 'themes: ' + themes.join(', ') : ''
+        } -  ${plainTextDescription.substring(0, 200)}..." />
         <meta property="og:image" content="${
             process.env.ROOT_URL
         }/posts/posts.png" />
@@ -127,5 +108,27 @@ fs.writeFileSync(
     generateSiteMap(
         `${process.env.ROOT_URL}/posts/post`,
         textPosts.map((entry) => entry.split(' ')[0] + '.html')
+    )
+);
+
+fs.writeFileSync(
+    OUTPUT_PATH + '/' + 'feed.xml',
+    generateRss(
+        posts.map((entry) => {
+            return {
+                title: entry.title,
+                pubDate: new Date(entry.date).toUTCString(),
+                guid: `${process.env.ROOT_URL}/posts/post/${entry.date}.htmld`,
+                category: entry.themes.join(', '),
+                description: entry.content,
+                link: `${process.env.ROOT_URL}/posts/post/${entry.date}.htmld`,
+            };
+        }),
+        {
+            title: process.env.SITE_TITLE!,
+            link: `${process.env.ROOT_URL}/posts`,
+            description: 'A blog????.',
+            lastBuildDate: new Date().toUTCString(),
+        }
     )
 );

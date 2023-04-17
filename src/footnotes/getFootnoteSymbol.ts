@@ -15,4 +15,3 @@ export const getFootnoteSymbol = (numberOfFootnotes: number) =>
         .split('')
         .map((entry) => (mappings as any)[entry])
         .join('');
-
