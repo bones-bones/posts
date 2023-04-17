@@ -3,5 +3,4 @@ export interface Post {
     content: string;
     date: string;
     themes: string[];
-    threads: string[];
 }

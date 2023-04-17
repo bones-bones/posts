@@ -1,13 +1,7 @@
 import { Post } from './types';
 import { getFootnoteSymbol } from './footnotes';
 
-export const formatPostContent = ({
-    title,
-    date,
-    themes,
-    threads,
-    content,
-}: Post) => {
+export const formatPostContent = ({ title, date, themes, content }: Post) => {
     let postEntry = `<h3>${title}</h3>`;
     postEntry += `<div>
     `;
